@@ -1,13 +1,10 @@
 describe('login steam', () => {
-    before(
-        () => {
-            cy.visit('') 
-            cy.get('a.global_action_link').click()
-            cy.url().should('include', '/login')
-            cy.login(Cypress.env('username'),Cypress.env('password'))
-        }
-    )
+
     it('will verify we are able to login', () => {
+       cy.visit('') 
+       cy.get('a.global_action_link').click()
+       cy.url().should('include', '/login')
+       cy.login(Cypress.env('username'),Cypress.env('password'))
        cy.get('#account_pulldown').should('contain', 'sasy_rf')
     });
     it('will verify we are able to search a game', () => {
@@ -26,19 +23,24 @@ describe('login steam', () => {
         cy.contains('.store_header_btn_content', 'Wishlist').click()
         cy.login(Cypress.env('username'),Cypress.env('password'))
         cy.wait(4000)
-        cy.get('#wishlist_ctn')
+        cy.get('#wishlist_ctn .wishlist_row')
           .scrapeElements({
               elementsToScrape: [
                   { label: 'product_name', locator: 'a.title'},
-                //  { label: 'overall_reviews', locator: '.value game_review_summary positive'},
+                  //{ label: 'overall_reviews', locator: '.value game_review_summary positive'},
               ],
             })
           .then((scrapeData) => {
-          /* var testData = JSON.stringify(scrapeData.data);
+           /*var testData = JSON.stringify(scrapeData.data);
             cy.log(testData)*/
                 expect(scrapeData.data).to.deep.eq([
                 { 
                     product_name: 'Among Us',
+                    //overall_reviews: 'VERY POSITIVE',
+                },
+                { 
+                    product_name: 'Crab Game',
+                    //overall_reviews: 'VERY POSITIVE',
                 },
             ]);
           });
